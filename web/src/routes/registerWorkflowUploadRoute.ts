@@ -69,16 +69,40 @@ const corsHeaders = {
 };
 
 export const registerWorkflowUploadRoute = (app: App) => {
+  // Add middleware to log requests before validation
+  app.use("/workflow", async (c, next) => {
+    if (c.req.method === "POST") {
+      try {
+        const rawBody = await c.req.text();
+        console.log("Raw request body:", rawBody);
+        
+        const parsedBody = JSON.parse(rawBody);
+        console.log("Parsed request body:", JSON.stringify(parsedBody, null, 2));
+        console.log("workflow_api type:", typeof parsedBody.workflow_api);
+        console.log("snapshot present:", parsedBody.snapshot !== undefined);
+        
+        // Recreate the request for the next handler
+        c.req = new Request(c.req.url, {
+          method: c.req.method,
+          headers: c.req.header(),
+          body: rawBody,
+        }) as any;
+      } catch (error) {
+        console.log("Error parsing request body:", error);
+      }
+    }
+    await next();
+  });
+
   app.openapi(route, async (c) => {
-    console.log(c.req);
     const {
-      // user_id,
       workflow,
       workflow_api,
       workflow_id: _workflow_id,
       workflow_name,
       snapshot,
     } = c.req.valid("json");
+    
     const { org_id, user_id } = c.get("apiKeyTokenData")!;
 
     if (!user_id)
@@ -93,7 +117,6 @@ export const registerWorkflowUploadRoute = (app: App) => {
       );
 
     let workflow_id = _workflow_id;
-
     let version = -1;
 
     try {
