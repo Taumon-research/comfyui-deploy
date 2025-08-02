@@ -1396,6 +1396,7 @@ async function deployWorkflow() {
       workflow_json: prompt.workflow,
       workflow_api: prompt.output,
       api_url: apiUrl,
+      snapshot: snapshot,
     };
     console.log(body);
     let data = await fetch("/comfyui-deploy/workflow", {
