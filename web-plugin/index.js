@@ -1870,7 +1870,7 @@ export class ConfigDialog extends ComfyDialog {
 
     saveData({
       endpoint,
-      apiUrl: getData(deployOption).apiUrl,
+      apiUrl: endpoint,
       apiKey,
       displayName,
       environment: deployOption,
