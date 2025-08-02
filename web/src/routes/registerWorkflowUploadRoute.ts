@@ -70,6 +70,7 @@ const corsHeaders = {
 
 export const registerWorkflowUploadRoute = (app: App) => {
   app.openapi(route, async (c) => {
+    console.log(c.req);
     const {
       // user_id,
       workflow,
