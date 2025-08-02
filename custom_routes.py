@@ -2979,7 +2979,7 @@ async def create_workflow_proxy(request):
     request_body = {
         "name": name,
         "workflow_json": json.dumps(workflow_json),
-        "workflow_api": json.dumps(workflow_api),
+        "workflow_api": workflow_api,
     }
 
     try:
