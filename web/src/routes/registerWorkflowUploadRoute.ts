@@ -84,7 +84,7 @@ export const registerWorkflowUploadRoute = (app: App) => {
         // Recreate the request for the next handler
         c.req = new Request(c.req.url, {
           method: c.req.method,
-          headers: c.req.header(),
+          headers: c.req.header,
           body: rawBody,
         }) as any;
       } catch (error) {
