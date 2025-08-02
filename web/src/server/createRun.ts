@@ -192,9 +192,21 @@ export const createRun = withServerPromise(
             prompt_id: prompt_id,
           };
           // console.log(body);
+          if (
+            !machine.auth_token &&
+            !machine.endpoint.includes("localhost") &&
+            !machine.endpoint.includes("127.0.0.1")
+          ) {
+            throw new Error("Machine auth token not found");
+          }
+          
           const comfyui_endpoint = `${machine.endpoint}/comfyui-deploy/run`;
           const _result = await fetch(comfyui_endpoint, {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${machine.auth_token}`,
+            },
             body: JSON.stringify(body),
             cache: "no-store",
           });
